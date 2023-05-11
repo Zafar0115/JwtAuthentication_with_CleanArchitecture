@@ -1,0 +1,14 @@
+C:\Users\user\source\repos\Notification\Notification\bin\Debug\net7.0\Notification.Domain.deps.json
+C:\Users\user\source\repos\Notification\Notification\bin\Debug\net7.0\Notification.Domain.dll
+C:\Users\user\source\repos\Notification\Notification\bin\Debug\net7.0\Notification.Domain.pdb
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.csproj.AssemblyReference.cache
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.AssemblyInfoInputs.cache
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.AssemblyInfo.cs
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.csproj.CoreCompileInputs.cache
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.dll
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\refint\Notification.Domain.dll
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.pdb
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\ref\Notification.Domain.dll
+C:\Users\user\source\repos\Notification\Notification\bin\Debug\net7.0\Notification.Domain.runtimeconfig.json
+C:\Users\user\source\repos\Notification\Notification\obj\Debug\net7.0\Notification.Domain.genruntimeconfig.cache
