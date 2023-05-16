@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Notification.Domain.Models
@@ -12,15 +13,15 @@ namespace Notification.Domain.Models
     public class Service
     {
         [Column("service_id")]
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Column("service_name")]
-        public required string ServiceName { get; set; }
+        public string ServiceName { get; set; }
 
         [Column("ip",TypeName ="varchar(200)")]
-        public required string ServiceIp { get; set; } 
-
-        private ICollection<Message> Messages { get; set; }
+        public string ServiceIp { get; set; }
+        [JsonIgnore]
+        public ICollection<Message>? Messages { get; set; }
 
     }
 }

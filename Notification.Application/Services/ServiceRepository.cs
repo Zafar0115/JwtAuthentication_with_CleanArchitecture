@@ -40,13 +40,13 @@ namespace Notification.Application.Services
             return false;
         }
 
-        public Task<IQueryable<Service>> GetAllAsync(Expression<Func<Service, bool>>? expression = null)
+        public Task<IQueryable<Service>> GetAll(Expression<Func<Service, bool>>? expression = null)
         {
             IQueryable<Service> services = dbContext.Services;
             return Task.FromResult(services);
         }
 
-        public Task<Service> GetByIdAsync(int id)
+        public Task<Service?> GetById(int id)
         {
             Service? service = dbContext.Services.FirstOrDefault(m => m.Id == id);
 

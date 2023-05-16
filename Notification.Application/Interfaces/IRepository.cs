@@ -9,9 +9,9 @@ namespace Notification.Application.Interfaces
 {
     public interface IRepository<T> where T : class
     {
-        Task<T> GetByIdAsync(int id);
+        Task<T?> GetById(int id);
 
-        Task<IQueryable<T>> GetAllAsync(Expression<Func<T,bool>>? expression=null);
+        Task<IQueryable<T>> GetAll(Expression<Func<T,bool>>? expression=null);
         Task<bool> CreateAsync(T entity);
         Task<bool> UpdateAsync(T entity);
         Task<bool> DeleteAsync(int id);

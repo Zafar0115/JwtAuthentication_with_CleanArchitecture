@@ -12,9 +12,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="npgsql.EntityFrameworkCore.Postgresql" Version="7.0.4" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
+	  <PackageReference Include="npgsql.EntityFrameworkCore.Postgresql" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>

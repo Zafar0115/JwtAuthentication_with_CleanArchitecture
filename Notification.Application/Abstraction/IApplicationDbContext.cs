@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notification.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Notification.Application.Abstraction
 {
@@ -12,6 +7,12 @@ namespace Notification.Application.Abstraction
     {
         DbSet<Message> Messages { get; set; }
         DbSet<Service> Services { get; set; }
+        DbSet<User> Users { get; set; }
+        DbSet<Role> Roles { get; set; }
+        DbSet<Permission> Permissions { get; set; }
+        DbSet<RolePermission> RolePermissions { get; set; }
+        DbSet<UserRole> UserRoles { get; set; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
     }

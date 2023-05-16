@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 
 namespace Notification.UI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ServiceController :ControllerBase
+    [Route("[controller]")]
+    [Authorize]
+
+    public class ServiceController : ControllerBase
     {
         private readonly IServiceRepository _serviceRepository;
 
@@ -18,19 +21,20 @@ namespace Notification.UI.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<IActionResult> GetById([FromQuery]int id)
+        [Authorize(Roles = "ServiceGet")]
+        public async Task<IActionResult> GetById([FromQuery] int id)
         {
-            Service? service = await _serviceRepository.GetByIdAsync(id);
+            Service? service = await _serviceRepository.GetById(id);
             return Ok(service);
         }
 
 
 
         [HttpGet("GetAll")]
-        [Route("[action]")]
-        public async Task<IActionResult> GetAllAsync(int page = 1, int pageSize = 10)
+        [Authorize(Roles = "ServiceGetAll")]
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
-            IQueryable<Service> services = await _serviceRepository.GetAllAsync();
+            IQueryable<Service> services = await _serviceRepository.GetAll();
             return Ok(services);
         }
 
@@ -38,6 +42,8 @@ namespace Notification.UI.Controllers
 
         [HttpPut]
         [Route("[action]")]
+        [Authorize(Roles = "ServiceUpdate")]
+
         public async Task<IActionResult> Update([FromBody] Service service)
         {
             bool isSuccess = await _serviceRepository.UpdateAsync(service);
@@ -49,6 +55,7 @@ namespace Notification.UI.Controllers
 
         [HttpDelete]
         [Route("[action]")]
+        [Authorize(Roles = "ServiceDelete")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
             bool isSuccess = await _serviceRepository.DeleteAsync(id);
@@ -57,7 +64,7 @@ namespace Notification.UI.Controllers
 
 
         [HttpPost("Create")]
-        [Route("[action]")]
+        [Authorize(Roles ="ServiceCreate")]
         public async Task<IActionResult> CreateAsync([FromBody] Service service)
         {
             bool isSuccess = await _serviceRepository.CreateAsync(service);

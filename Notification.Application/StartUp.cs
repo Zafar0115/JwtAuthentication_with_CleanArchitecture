@@ -16,6 +16,12 @@ namespace Notification.Application
         {
             services.AddScoped<IMessageRepository, MessageRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IUserRepository,UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
+            services.AddScoped<IUserRoleRepository,UserRoleRepository>();
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }

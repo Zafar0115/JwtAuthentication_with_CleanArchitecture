@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 using System.Text.RegularExpressions;
@@ -6,7 +7,9 @@ using System.Text.RegularExpressions;
 namespace Notification.UI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
+    [Authorize]
+    
     public class MessageController : ControllerBase
     {
         private readonly IMessageRepository _messageRepository;
@@ -18,26 +21,28 @@ namespace Notification.UI.Controllers
 
         [HttpGet]
         [Route("[action]")]
-        public async Task<IActionResult> GetById([FromQuery]int id)
+        [Authorize(Roles="MessageGet")]
+        public async Task<IActionResult> GetById([FromQuery] int id)
         {
-            Message? message = await _messageRepository.GetByIdAsync(id);
+            Message? message = await _messageRepository.GetById(id);
             return Ok(message);
         }
 
 
         [HttpGet("getall")]
-        [Route("[action]")]
-        public async Task<IActionResult> GetAllAsync(int page=1, int pageSize=10)
+        [Authorize(Roles = "MessageGetAll")]
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
-            IQueryable<Message> messages = await _messageRepository.GetAllAsync();
+            IQueryable<Message> messages = await _messageRepository.GetAll();
             return Ok(messages);
         }
 
         [HttpPut]
         [Route("[action]")]
+        [Authorize(Roles = "MessageUpdate")]
         public async Task<IActionResult> Update([FromBody] Message message)
         {
-            bool isSuccess=await _messageRepository.UpdateAsync(message);
+            bool isSuccess = await _messageRepository.UpdateAsync(message);
 
             return Ok(isSuccess);
         }
@@ -46,18 +51,20 @@ namespace Notification.UI.Controllers
 
         [HttpDelete]
         [Route("[action]")]
+        [Authorize(Roles = "MessageDelete")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
-            bool isSuccess= await _messageRepository.DeleteAsync(id);   
+            bool isSuccess = await _messageRepository.DeleteAsync(id);
             return Ok(isSuccess);
         }
 
 
         [HttpPost]
         [Route("[action]")]
+        [Authorize(Roles = "MessageCreate")]
         public async Task<IActionResult> Create([FromBody] Message message)
         {
-           bool isSuccess=await _messageRepository.CreateAsync(message);
+            bool isSuccess = await _messageRepository.CreateAsync(message);
 
             if (isSuccess)
                 return Ok(message);

@@ -1,4 +1,5 @@
 ﻿using Notification.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Notification.Domain.Models
@@ -7,6 +8,7 @@ namespace Notification.Domain.Models
     public class Message
     {
         [Column("message_id")]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Column("user_id")]
         public int UserId { get; set; }
