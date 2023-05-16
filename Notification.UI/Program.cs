@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using Notification.Application;
 using Notification.Domain.Models;
 using Notification.Infrastructure;
+using System.Diagnostics;
 using System.Text;
 
 namespace Notification.UI
@@ -41,7 +42,11 @@ namespace Notification.UI
                 } });
             });
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            builder.Services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(options =>
                 {
                     options.SaveToken = true;
@@ -54,6 +59,17 @@ namespace Notification.UI
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                    };
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnAuthenticationFailed = context =>
+                        {
+                            if(context.Exception.GetType()== typeof(SecurityTokenExpiredException))
+                            {
+                                context.Response.Headers.Add("IS_TOKEN_EXPIRED", "true");
+                            }
+                            return Task.CompletedTask;
+                        }
                     };
                 });
 
@@ -79,8 +95,9 @@ namespace Notification.UI
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.MapControllers();
 
+          
+            app.MapControllers();        
             app.Run();
         }
     }

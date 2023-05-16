@@ -10,7 +10,7 @@ namespace Notification.Application.Interfaces
 {
     public interface ITokenService
     {
-        Task<string?> CreateTokenAsync(UserCredentials credentials, IConfiguration configuration);
+        Task<string?> CreateTokenAsync(UserCredentials credentials);
 
     }
 }

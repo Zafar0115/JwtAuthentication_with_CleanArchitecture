@@ -19,7 +19,6 @@ namespace Notification.Domain.Models
         public string RoleName { get; set; }
         [JsonIgnore]
         public virtual ICollection<UserRole>? UserRoles { get; set; }
-        [JsonIgnore]
         public virtual ICollection<RolePermission>? RolePermissions { get; set; }
 
     }

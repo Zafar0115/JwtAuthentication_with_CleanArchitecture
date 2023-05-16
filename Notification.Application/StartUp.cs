@@ -22,7 +22,8 @@ namespace Notification.Application
             services.AddScoped<IRolePermissionRepository, RolePermissionRepository>();
             services.AddScoped<IUserRoleRepository,UserRoleRepository>();
             services.AddScoped<ITokenService, TokenService>();
-
+            services.AddScoped<IJwtManagerRepository,JwtManagerRepository>();
+            services.AddScoped<IUserRefreshTokenService, UserRefreshTokenService>();    
             return services;
         }
     }

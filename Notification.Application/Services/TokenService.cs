@@ -13,13 +13,15 @@ namespace Notification.Application.Services
     public class TokenService:ITokenService
     {
         private readonly IApplicationDbContext _dbContext;
+        private readonly IConfiguration _configuration;
 
-        public TokenService(IApplicationDbContext dbContext)
+        public TokenService(IApplicationDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _configuration = configuration;
         }
 
-        public async Task<string?> CreateTokenAsync(UserCredentials credentials, IConfiguration configuration)
+        public async Task<string?> CreateTokenAsync(UserCredentials credentials)
         {
            
 
@@ -65,12 +67,12 @@ namespace Notification.Application.Services
 
             
 
-            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+            var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256);
 
             SecurityToken token = new JwtSecurityToken(
-                issuer: configuration["Jwt:Issuer"],
-                audience: configuration["Jwt:Audience"],
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 expires: DateTime.Now.AddMinutes(5),
                 claims: claims,
                 notBefore: DateTime.Now,

@@ -179,6 +179,35 @@ namespace Notification.Infrastructure.Migrations
                     b.ToTable("user");
                 });
 
+            modelBuilder.Entity("Notification.Domain.Models.UserRefreshTokens", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("RefreshToken")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("user_refresh_tokens");
+                });
+
             modelBuilder.Entity("Notification.Domain.Models.UserRole", b =>
                 {
                     b.Property<int>("Id")
@@ -233,6 +262,17 @@ namespace Notification.Infrastructure.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Notification.Domain.Models.UserRefreshTokens", b =>
+                {
+                    b.HasOne("Notification.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Notification.Domain.Models.UserRole", b =>

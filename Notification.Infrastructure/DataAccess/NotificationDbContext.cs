@@ -17,5 +17,6 @@ namespace Notification.Infrastructure.DataAccess
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserRefreshTokens> UserRefreshTokens { get; set; }
     }
 }
