@@ -13,6 +13,7 @@ namespace Notification.Domain.Models
     public class UserRefreshTokens
     {
         [Column("id")]
+
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [Column("user_id")]
@@ -21,6 +22,8 @@ namespace Notification.Domain.Models
         public User? User { get; set; }
         [Column("refresh_token")]
         public string RefreshToken { get; set; }
+        [Column("expiration_date")]
+        public DateTimeOffset ExpirationDate { get; set; }
         [Column("is_active")]
         public bool IsActive { get; set; } = true;
     }

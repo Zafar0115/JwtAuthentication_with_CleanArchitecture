@@ -18,5 +18,12 @@ namespace Notification.Infrastructure.DataAccess
         public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserRefreshTokens> UserRefreshTokens { get; set; }
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            int result = await base.SaveChangesAsync(cancellationToken);
+            await Database.ExecuteSqlRawAsync("update user_refresh_tokens set is_active=false where expiration_date<(select current_timestamp)");
+            return result;
+        }
     }
 }

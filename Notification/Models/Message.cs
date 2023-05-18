@@ -1,6 +1,7 @@
 ﻿using Notification.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Notification.Domain.Models
 {
@@ -9,6 +10,7 @@ namespace Notification.Domain.Models
     {
         [Column("message_id")]
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [JsonIgnore]
         public int Id { get; set; }
         [Column("user_id")]
         public int UserId { get; set; }

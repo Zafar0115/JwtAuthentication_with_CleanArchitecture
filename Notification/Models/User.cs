@@ -18,7 +18,7 @@ namespace Notification.Domain.Models
 
         [Column("user_name", TypeName = "varchar(100)")]
         public  string UserName { get; set; }
-        [Column("password", TypeName = "varchar(50)")]
+        [Column("password", TypeName = "varchar(500)")]
         public  string Password { get; set; }
         [Column("email", TypeName = "varchar(50)")]
         public  string EmailAddress { get; set; }

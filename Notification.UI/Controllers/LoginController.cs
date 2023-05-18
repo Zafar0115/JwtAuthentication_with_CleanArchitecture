@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Abstraction;
+using Notification.Application.Extensions;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 
@@ -19,11 +19,11 @@ namespace Notification.UI.Controllers
 
         public LoginController
             (
-            IApplicationDbContext dbContext,
-            ITokenService tokenService,
-            IConfiguration configuration,
-            IJwtManagerRepository jwtManagerRepository,
-            IUserRefreshTokenService userRefreshTokenService
+                    IApplicationDbContext dbContext,
+                    ITokenService tokenService,
+                    IConfiguration configuration,
+                    IJwtManagerRepository jwtManagerRepository,
+                    IUserRefreshTokenService userRefreshTokenService
             )
         {
             _dbContext = dbContext;
@@ -33,38 +33,56 @@ namespace Notification.UI.Controllers
             _userRefreshTokenService = userRefreshTokenService;
         }
 
+
         [HttpPost("login")]
         public async Task<IResult> Login([FromBody] UserCredentials credentials)
         {
-            Token? token = _jwtManagerRepository.GenerateTokens(credentials);
+            Token? token = _jwtManagerRepository.GenerateAccessTokens(credentials);
 
-            if (token is null) return Results.NotFound("Invalid attempt");
+            if (token is null)
+                return Results.NotFound("User not found");
 
             User? user = _dbContext.Users.FirstOrDefault(x => x.UserName == credentials.UserName &&
-                                                         x.Password == credentials.Password &&
+                                                         x.Password == credentials.Password.ComputeHash() &&
                                                          x.EmailAddress == credentials.EmailAddress);
 
-            if (user is null) Results.NotFound("Invalid attempt");
+            if (user is null)
+                return Results.NotFound("User not found");
+            int.TryParse(_configuration["Jwt:AccessTokenLifetime"], out int lifetime);
 
             UserRefreshTokens obj = new UserRefreshTokens()
             {
                 User = user,
-                RefreshToken = token.RefreshToken
+                RefreshToken = token.RefreshToken,
+                ExpirationDate = DateTimeOffset.UtcNow.AddMinutes(lifetime),
             };
 
-            _userRefreshTokenService.AddUserRefreshTokens(obj);
+            UserRefreshTokens? userRefreshTokens = _dbContext.UserRefreshTokens
+                                                        .FirstOrDefault(o => o.UserId == user.Id);
+
+            if (userRefreshTokens is null)
+            {
+                await _userRefreshTokenService.AddUserRefreshTokens(obj);
+            }
+            else
+            {
+                _dbContext.UserRefreshTokens.Remove(userRefreshTokens);
+                await _dbContext.SaveChangesAsync();
+                await _userRefreshTokenService.AddUserRefreshTokens(obj);
+            }
+
             return Results.Ok(token);
 
 
         }
-        [AllowAnonymous]
+
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] Token token)
         {
             var principal = _jwtManagerRepository
                             .GetPrincipalFromExpiredToken(token.AccessToken);
 
-            var username = principal?.Identity.Name;
+            string? username = principal?.Identity?.Name;
 
             User? user = _dbContext.Users
                             .FirstOrDefault(x => x.UserName == username);
@@ -82,11 +100,10 @@ namespace Notification.UI.Controllers
             UserRefreshTokens? savedRefreshedToken = await _userRefreshTokenService
                                                     .GetSavedRefreshTokens(credentials, token.RefreshToken);
 
-            if (savedRefreshedToken is null||savedRefreshedToken.RefreshToken!=token.RefreshToken)
+            if (savedRefreshedToken is null || savedRefreshedToken.RefreshToken != token.RefreshToken)
             {
                 return Unauthorized("Invalid attempt");
             }
-
 
             var newToken = _jwtManagerRepository
                 .GenerateRefreshToken(credentials);
@@ -94,11 +111,13 @@ namespace Notification.UI.Controllers
             {
                 return Unauthorized("Invalid attempt");
             }
+            int.TryParse(_configuration["Jwt:RefreshTokenLifetime"], out int lifetime);
 
             UserRefreshTokens obj = new UserRefreshTokens
             {
+                User = user,
                 RefreshToken = newToken.RefreshToken,
-                User = user
+                ExpirationDate = DateTimeOffset.UtcNow.AddMinutes(lifetime),
             };
 
             await _userRefreshTokenService.DeleteUserRefreshTokens(credentials, token.RefreshToken);

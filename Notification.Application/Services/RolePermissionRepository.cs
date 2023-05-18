@@ -21,6 +21,8 @@ namespace Notification.Application.Services
 
         public async Task<bool> CreateAsync(RolePermission entity)
         {
+            int count = dbContext.RolePermissions.ToList().Count;
+            entity.Id = count + 1;
             await dbContext.RolePermissions.AddAsync(entity);
             int affected = await dbContext.SaveChangesAsync();
             return affected > 0;

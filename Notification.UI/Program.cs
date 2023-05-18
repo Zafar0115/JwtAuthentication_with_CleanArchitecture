@@ -45,7 +45,6 @@ namespace Notification.UI
             builder.Services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
                 {
@@ -58,6 +57,8 @@ namespace Notification.UI
                         ValidAudience = builder.Configuration["Jwt:Audience"],
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidateIssuerSigningKey = true,
+                        RequireExpirationTime= true,
+                        ClockSkew=TimeSpan.Zero,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                     };
                     options.Events = new JwtBearerEvents

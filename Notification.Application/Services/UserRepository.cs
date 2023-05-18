@@ -1,4 +1,5 @@
 ﻿using Notification.Application.Abstraction;
+using Notification.Application.Extensions;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 using System.Linq.Expressions;
@@ -16,6 +17,10 @@ namespace Notification.Application.Services
 
         public async Task<bool> CreateAsync(User entity)
         {
+            int count = dbContext.Users.ToList().Count;
+            entity.Id = count + 1;
+            entity.Password = entity.Password.ComputeHash();
+
             await dbContext.Users.AddAsync(entity);
             int affectedRows = await dbContext.SaveChangesAsync();
             return affectedRows > 0;
@@ -54,7 +59,7 @@ namespace Notification.Application.Services
 
             if (user is null) return false;
             user.UserName = entity.UserName;
-            user.Password=entity.Password;
+            user.Password=entity.Password.ComputeHash();
             user.EmailAddress = entity.EmailAddress;
             user.FullName = entity.FullName;
             int affectedRows = await dbContext.SaveChangesAsync();

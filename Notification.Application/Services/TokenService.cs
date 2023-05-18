@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Notification.Application.Abstraction;
+using Notification.Application.Extensions;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 using System.IdentityModel.Tokens.Jwt;
@@ -23,16 +24,12 @@ namespace Notification.Application.Services
 
         public async Task<string?> CreateTokenAsync(UserCredentials credentials)
         {
-           
-
-
-
             User? user = _dbContext.Users.Where(o => o.UserName == credentials.UserName
                                         && o.EmailAddress == credentials.EmailAddress
-                                        && o.Password == credentials.Password)
-                                        .Include(u => u.UserRoles)
-                                        .ThenInclude(x => x.Role)
-                                        .ThenInclude(r=>r.RolePermissions)
+                                        && o.Password == credentials.Password.ComputeHash())?
+                                        .Include(u => u.UserRoles)?
+                                        .ThenInclude(x => x.Role)?
+                                        .ThenInclude(r=>r.RolePermissions)?
                                         .ThenInclude(rp=>rp.Permission)
                                         .Select(x=>x)
                                         .FirstOrDefault();

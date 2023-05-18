@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
+using System.Data;
 
 namespace Notification.UI.Controllers
 {
@@ -17,6 +19,8 @@ namespace Notification.UI.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize(Roles = "RolePermissionGet")]
+
         public async Task<IActionResult> GetById([FromQuery] int id)
         {
             RolePermission? rolePermission = await _rolePermissionRepository.GetById(id);
@@ -25,6 +29,8 @@ namespace Notification.UI.Controllers
         }
 
         [HttpGet("GetAll")]
+        [Authorize(Roles = "RolePermissionGetAll")]
+
         public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
             IQueryable<RolePermission> rolePermissions = await _rolePermissionRepository.GetAll();
@@ -33,6 +39,8 @@ namespace Notification.UI.Controllers
 
         [HttpPut]
         [Route("[action]")]
+        [Authorize(Roles = "RolePermissionUpdate")]
+
         public async Task<IActionResult> Update([FromBody] RolePermission rolePermission)
         {
             bool isSuccess = await _rolePermissionRepository.UpdateAsync(rolePermission);
@@ -45,6 +53,8 @@ namespace Notification.UI.Controllers
 
         [HttpDelete]
         [Route("[action]")]
+        [Authorize(Roles = "RolePermissionDelete")]
+
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
             bool isSuccess = await _rolePermissionRepository.DeleteAsync(id);
@@ -53,6 +63,8 @@ namespace Notification.UI.Controllers
 
 
         [HttpPost("Create")]
+        [Authorize(Roles = "RolePermissionCreate")]
+
         public async Task<IActionResult> CreateAsync([FromBody] RolePermission rolePermission)
         {
             bool isSuccess = await _rolePermissionRepository.CreateAsync(rolePermission);

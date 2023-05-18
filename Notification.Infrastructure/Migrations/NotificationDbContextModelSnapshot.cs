@@ -166,7 +166,7 @@ namespace Notification.Infrastructure.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("varchar(50)")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("password");
 
                     b.Property<string>("UserName")
@@ -187,6 +187,10 @@ namespace Notification.Infrastructure.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_date");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")

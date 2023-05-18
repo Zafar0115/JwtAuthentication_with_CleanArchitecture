@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Notification.Application.Abstraction;
+using Notification.Application.Extensions;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
 
@@ -18,8 +19,10 @@ namespace Notification.Application.Services
 
         public async Task<UserRefreshTokens> AddUserRefreshTokens(UserRefreshTokens user)
         {
+            int count = _dbContext.UserRefreshTokens.ToList().Count;
+            user.Id = count + 1;
             _dbContext.UserRefreshTokens.Add(user);
-           await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             return user;
         }
 
@@ -28,8 +31,8 @@ namespace Notification.Application.Services
             var userRefreshTokens = _dbContext.UserRefreshTokens.Include(x => x.User)
                 .FirstOrDefault(x => x.User.UserName == credentials.UserName &&
                                      x.User.EmailAddress == credentials.EmailAddress &&
-                                     x.User.Password == credentials.Password&&
-                                     x.RefreshToken==refreshToken);
+                                     x.User.Password == credentials.Password &&
+                                     x.RefreshToken == refreshToken);
 
             if (userRefreshTokens is null) return false;
 
@@ -39,17 +42,16 @@ namespace Notification.Application.Services
 
         }
 
-        public async Task<UserRefreshTokens?> GetSavedRefreshTokens(UserCredentials credentials, string refreshToken)
+        public Task<UserRefreshTokens?> GetSavedRefreshTokens(UserCredentials credentials, string refreshToken)
         {
-            var userRefreshTokens= _dbContext.UserRefreshTokens.Include(x => x.User).Select(x=>x)
+            UserRefreshTokens? userRefreshTokens = _dbContext.UserRefreshTokens.Include(x => x.User).Select(x => x)
                 .FirstOrDefault(x => x.User.UserName == credentials.UserName &&
                                      x.User.EmailAddress == credentials.EmailAddress &&
                                      x.User.Password == credentials.Password &&
                                      x.RefreshToken == refreshToken);
 
-           
-            return userRefreshTokens;
+
+            return Task.FromResult(userRefreshTokens);
         }
-      
     }
 }

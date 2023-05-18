@@ -21,6 +21,8 @@ namespace Notification.Application.Services
 
         public async Task<bool> CreateAsync(Service entity)
         {
+            int count = dbContext.Services.ToList().Count;
+            entity.Id = count + 1;
             dbContext.Services.Add(entity);
             int change = await dbContext.SaveChangesAsync();
 

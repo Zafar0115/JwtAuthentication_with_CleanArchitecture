@@ -22,7 +22,9 @@ namespace Notification.Application.Services
 
         public async Task<bool> CreateAsync(Message entity)
         {
-             dbContext.Messages.Add(entity);
+            int count = dbContext.Messages.ToList().Count;
+            entity.Id = count + 1;
+            dbContext.Messages.Add(entity);
             int change=await dbContext.SaveChangesAsync();
 
             if (change > 0)

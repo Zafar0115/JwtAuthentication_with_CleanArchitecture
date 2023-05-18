@@ -14,6 +14,7 @@ namespace Notification.Domain.Models
     {
         [Column("permission_id")]
         [Key,DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+
         public int Id { get; set; }
         [Column("permission_name",TypeName ="varchar(50)")]
         public  string PermissionName { get; set; }

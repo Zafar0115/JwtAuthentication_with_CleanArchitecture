@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Interfaces;
 using Notification.Application.Services;
 using Notification.Domain.Models;
+using System.Data;
 
 namespace Notification.UI.Controllers
 {
@@ -18,6 +20,7 @@ namespace Notification.UI.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        [Authorize(Roles = "UserGet")]
         public async Task<IActionResult> GetById([FromQuery] int id)
         {
             User? user = await _userRepository.GetById(id);
@@ -26,7 +29,8 @@ namespace Notification.UI.Controllers
         }
 
         [HttpGet("GetAll")]
-        public  async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
+        [Authorize(Roles = "UserGetAll")]
+        public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
         {
             IQueryable<User> users = await _userRepository.GetAll();
             return Ok(users);
@@ -34,6 +38,7 @@ namespace Notification.UI.Controllers
 
         [HttpPut]
         [Route("[action]")]
+        [Authorize(Roles = "UserUpdate")]
         public async Task<IActionResult> Update([FromBody] User user)
         {
             bool isSuccess = await _userRepository.UpdateAsync(user);
@@ -46,6 +51,7 @@ namespace Notification.UI.Controllers
 
         [HttpDelete]
         [Route("[action]")]
+        [Authorize(Roles = "UserDelete")]
         public async Task<IActionResult> Delete([FromQuery] int id)
         {
             bool isSuccess = await _userRepository.DeleteAsync(id);
@@ -54,6 +60,7 @@ namespace Notification.UI.Controllers
 
 
         [HttpPost("Create")]
+        [Authorize(Roles = "UserCreate")]
         public async Task<IActionResult> CreateAsync([FromBody] User user)
         {
             bool isSuccess = await _userRepository.CreateAsync(user);

@@ -10,8 +10,8 @@ namespace Notification.Application.Interfaces
 {
     public interface IJwtManagerRepository
     {
-        Token GenerateTokens(UserCredentials userCredentials);
-        Token GenerateRefreshToken(UserCredentials userCredentials);
-        ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
+        Token? GenerateAccessTokens(UserCredentials userCredentials);
+        Token? GenerateRefreshToken(UserCredentials userCredentials);
+        ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
     }
 }

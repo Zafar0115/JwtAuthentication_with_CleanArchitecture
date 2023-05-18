@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Notification.Application.Interfaces;
 using Notification.Domain.Models;
+using System.Data;
 
 namespace Notification.UI.Controllers
 {
@@ -33,6 +35,7 @@ namespace Notification.UI.Controllers
 
         [HttpPut]
         [Route("[action]")]
+
         public async Task<IActionResult> Update([FromBody] Permission permission)
         {
             bool isSuccess = await _permissionRepository.UpdateAsync(permission);
@@ -45,6 +48,7 @@ namespace Notification.UI.Controllers
 
         [HttpDelete]
         [Route("[action]")]
+
         public async Task<IActionResult> Delete([FromBody] int id)
         {
             bool isSuccess = await _permissionRepository.DeleteAsync(id);
@@ -53,6 +57,7 @@ namespace Notification.UI.Controllers
 
 
         [HttpPost("Create")]
+
         public async Task<IActionResult> CreateAsync([FromBody]Permission permission)
         {
             bool isSuccess = await _permissionRepository.CreateAsync(permission);
